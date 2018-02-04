@@ -33,10 +33,10 @@ defmodule Tesla.Middleware.ParseResponse do
   end
 
   defp item(itm, includes, errors) do
-    itm
+    itm2 = itm
     |> Map.put("includes", includes)
     |> Map.put("errors", errors)
-    resolve(itm)
+    resolve(itm2)
   end
 
   defp resolve(item) do
@@ -53,6 +53,9 @@ defmodule Tesla.Middleware.ParseResponse do
     |> Enum.reduce(%{}, fn(x, z) -> 
       {k, v} = resolve_include(type, x, includes)
       Map.put(z, k, v) end)
+  end
+  defp resolve_include(_type, val, nil) do
+    val
   end
   defp resolve_include(:asset, {key, %{"sys" => %{"type" => "Link", "linkType" => "Asset", "id" => id}} = val}, includes) do
     {key, resolve_include(:asset, includes["Asset"], id, val)}
@@ -77,7 +80,7 @@ defmodule Tesla.Middleware.ParseResponse do
     # Logger.error("ERROR: #{inspect errors}")
     case Enum.find(errors, fn(x) -> x["details"]["id"] == id end) do
       nil -> val
-      err -> err
+      err -> %{ "error" => err }
     end
   end
 
