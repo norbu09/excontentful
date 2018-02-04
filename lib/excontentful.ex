@@ -35,19 +35,19 @@ defmodule Excontentful do
   end
 
   def update_entry(entry) do
-    Excontentful.Management.update_entry(entry)
+    Excontentful.Management.Entry.update(entry)
   end
 
   def publish_entry(id) do
-    Excontentful.Management.publish_entry(id)
+    Excontentful.Management.Entry.publish(id)
   end
 
   def unpublish_entry(id) do
-    Excontentful.Management.publish_entry(id)
+    Excontentful.Management.Entry.unpublish(id)
   end
 
   def delete_entry(id) do
-    Excontentful.Management.delete_entry(id)
+    Excontentful.Management.Entry.del(id)
   end
 
   def search_entry(content_type, field, value) do

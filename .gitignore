@@ -22,3 +22,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 excontentful-*.tar
 
+# ignore local config overrides
+config/local.exs

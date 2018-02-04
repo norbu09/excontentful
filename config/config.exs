@@ -33,3 +33,7 @@ config :excontentful,
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+if File.exists?("config/local.exs") do
+  import_config "local.exs"
+end

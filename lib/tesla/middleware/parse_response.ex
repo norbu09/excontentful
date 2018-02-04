@@ -9,15 +9,18 @@ defmodule Tesla.Middleware.ParseResponse do
     |> parse(options)
   end
 
+  # parser types
   defp parse(:entry, body) do
-    Logger.debug("RAW: #{inspect body}")
-    item = List.first(body["items"])
-           |> Map.put("includes", body["includes"])
-           |> Map.put("errors", body["errors"])
-    resolve(item)
+    # Logger.debug("RAW: #{inspect body}")
+    item(List.first(body["items"]), body["includes"], body["errors"])
   end
 
   defp parse(:entries, body) do
+    body["items"]
+    |> Enum.reduce([], fn(x, acc) -> acc ++ [ item(x, body["includes"], body["errors"])] end)
+  end
+
+  defp parse(:raw, body) do
     body
   end
 
@@ -27,6 +30,13 @@ defmodule Tesla.Middleware.ParseResponse do
         parse(options.type, res.body)
       _   -> res
     end
+  end
+
+  defp item(itm, includes, errors) do
+    itm
+    |> Map.put("includes", includes)
+    |> Map.put("errors", errors)
+    resolve(itm)
   end
 
   defp resolve(item) do
