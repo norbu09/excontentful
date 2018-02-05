@@ -24,7 +24,8 @@ use Mix.Config
 config :excontentful,
   space: "foo",
   token: "bar",
-  preview_token: "baz"
+  prev_token: "baz",
+  mgmt_token: "bay"
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

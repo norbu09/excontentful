@@ -10,9 +10,12 @@ defmodule Tesla.Middleware.ParseResponse do
   end
 
   # parser types
-  defp parse(:entry, body) do
+  defp parse(:entry, %{"items" => items} = body) do
     # Logger.debug("RAW: #{inspect body}")
-    item(List.first(body["items"]), body["includes"], body["errors"])
+    item(List.first(items), body["includes"], body["errors"])
+  end
+  defp parse(:entry, item) do
+    item(item, nil, nil)
   end
 
   defp parse(:entries, body) do
@@ -26,9 +29,9 @@ defmodule Tesla.Middleware.ParseResponse do
 
   defp parse(res, options) do
     case res.status do
-      200 -> 
-        parse(options.type, res.body)
-      _   -> res
+      200 -> {:ok, parse(options.type, res.body)}
+      # _   -> {:error, res.body}
+      _   -> {:error, res}
     end
   end
 

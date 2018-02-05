@@ -34,6 +34,10 @@ defmodule Excontentful do
     Excontentful.Delivery.Entry.get?(id)
   end
 
+  def get_entry_prev(id) do
+    Excontentful.Preview.Entry.get?(id)
+  end
+
   def update_entry(entry) do
     Excontentful.Management.Entry.update(entry)
   end
@@ -52,6 +56,10 @@ defmodule Excontentful do
 
   def search_entry(content_type, field, value) do
     Excontentful.Delivery.Entry.search(content_type, field, value)
+  end
+
+  def search_entry_prev(content_type, field, value) do
+    Excontentful.Preview.Entry.search(content_type, field, value)
   end
 
 end
