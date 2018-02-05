@@ -20,6 +20,10 @@ defmodule Excontentful do
     Excontentful.Delivery.Entries.by_content(content_type)
   end
 
+  def entries(content_type, options) do
+    Excontentful.Delivery.Entries.by_content(content_type, options)
+  end
+
   def search_entries(content_type, query) do
     Excontentful.Delivery.Entries.search(content_type, query)
   end

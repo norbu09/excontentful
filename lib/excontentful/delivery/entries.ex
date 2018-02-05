@@ -16,11 +16,16 @@ defmodule Excontentful.Delivery.Entries do
   end
 
   def by_content(type) do
-    get("/entries?content_type=#{type}")
+    get("/entries", query: [content_type: type])
+  end
+
+  def by_content(type, opts) do
+    query = [content_type: type] ++ opts
+    get("/entries", query: query)
   end
 
   def search(type, query) do
-    get("/entries?content_type=#{type}&query=#{query}")
+    get("/entries", query: [content_type: type, query: query])
   end
   
 end
