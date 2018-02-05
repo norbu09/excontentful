@@ -7,6 +7,9 @@ defmodule Excontentful do
   use GenServer
   require Logger
 
+  def start_link do
+    start_link(nil)
+  end
   def start_link([], default) do
     start_link(default)
   end
