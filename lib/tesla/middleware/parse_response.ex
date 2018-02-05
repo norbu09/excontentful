@@ -11,7 +11,7 @@ defmodule Tesla.Middleware.ParseResponse do
 
   # parser types
   defp parse(:entry, %{"items" => items} = body) do
-    # Logger.debug("RAW: #{inspect body}")
+    Logger.debug("RAW: #{inspect body}")
     item(List.first(items), body["includes"], body["errors"])
   end
   defp parse(:entry, item) do
@@ -60,14 +60,25 @@ defmodule Tesla.Middleware.ParseResponse do
   defp resolve_include(_type, val, nil) do
     val
   end
+  defp resolve_include(type, {key, val}, includes) when is_list(val) do
+    Logger.debug("Type: #{type} - Link: #{inspect val}")
+    res = val
+          |> Enum.map(fn(x) -> resolve_include(type, {key, x}, includes) end)
+          |> Enum.reduce([], fn({_, y}, acc) -> acc ++ [y] end)
+  {key, res}
+  end
   defp resolve_include(:asset, {key, %{"sys" => %{"type" => "Link", "linkType" => "Asset", "id" => id}} = val}, includes) do
     {key, resolve_include(:asset, includes["Asset"], id, val)}
+  end
+  defp resolve_include(:asset, {key, %{"sys" => %{"type" => "Link", "linkType" => "Entry", "id" => id}} = val}, includes) do
+    {key, resolve_include(:asset, includes["Entry"], id, val)}
   end
   defp resolve_include(:error, {key, %{"sys" => %{"id" => id}} = val}, errors) do
     Logger.error("ERROR: #{inspect errors}")
     {key, resolve_include(:error, errors, id, val)}
   end
   defp resolve_include(_type, tuple, _includes) do
+    Logger.debug("tuple: #{inspect tuple}")
     tuple
   end
   defp resolve_include(_type, nil, _id, val) do
