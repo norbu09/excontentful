@@ -4,7 +4,7 @@ defmodule Excontentful do
   tries to abstract away API decisions that users may not be interesd in. It
   also tries to establish some common defaults 
   """
-
+  require Logger
 
   @doc """
   Entries calls
@@ -13,19 +13,31 @@ defmodule Excontentful do
   These calls deal with many entries and will always return a list.
   """
   def entries do
-    Excontentful.Delivery.Entries.all()
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.entries(pid)
+    GenServer.stop(pid)
+    res
   end
 
   def entries(content_type) do
-    Excontentful.Delivery.Entries.by_content(content_type)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.entries(pid, content_type)
+    GenServer.stop(pid)
+    res
   end
 
   def entries(content_type, options) do
-    Excontentful.Delivery.Entries.by_content(content_type, options)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.entries(pid, content_type, options)
+    GenServer.stop(pid)
+    res
   end
 
   def search_entries(content_type, query) do
-    Excontentful.Delivery.Entries.search(content_type, query)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.search_entries(pid, content_type, query)
+    GenServer.stop(pid)
+    res
   end
 
   @doc """
@@ -35,35 +47,73 @@ defmodule Excontentful do
   These calls deal with a single entry and will always return a map.
   """
   def get_entry(id) do
-    Excontentful.Delivery.Entry.get?(id)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.get_entry(pid, id)
+    GenServer.stop(pid)
+    res
   end
 
   def get_entry_prev(id) do
-    Excontentful.Preview.Entry.get?(id)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.get_entry_prev(pid, id)
+    GenServer.stop(pid)
+    res
   end
 
   def update_entry(entry) do
-    Excontentful.Management.Entry.update(entry)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.update_entry(pid, entry)
+    GenServer.stop(pid)
+    res
   end
 
   def publish_entry(id) do
-    Excontentful.Management.Entry.publish(id)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.publish_entry(pid, id)
+    GenServer.stop(pid)
+    res
   end
 
   def unpublish_entry(id) do
-    Excontentful.Management.Entry.unpublish(id)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.unpublish_entry(pid, id)
+    GenServer.stop(pid)
+    res
   end
 
   def delete_entry(id) do
-    Excontentful.Management.Entry.del(id)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.delete_entry(pid, id)
+    GenServer.stop(pid)
+    res
   end
 
   def search_entry(content_type, field, value) do
-    Excontentful.Delivery.Entry.search(content_type, field, value)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.search_entry(pid, content_type, field, value)
+    GenServer.stop(pid)
+    res
   end
 
   def search_entry_prev(content_type, field, value) do
-    Excontentful.Preview.Entry.search(content_type, field, value)
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.search_entry_prev(pid, content_type, field, value)
+    GenServer.stop(pid)
+    res
   end
+
+  @doc """
+  Asset calls
+  -------------
+
+  These calls deal with a single asset and will always return a map.
+  """
+  def get_asset(id) do
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.get_asset(pid, id)
+    GenServer.stop(pid)
+    res
+  end
+
 
 end

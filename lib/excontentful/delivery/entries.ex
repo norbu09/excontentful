@@ -2,30 +2,41 @@ defmodule Excontentful.Delivery.Entries do
 
   use Tesla
 
-  @token System.get_env("CONTENTFUL_TOKEN") || Application.get_env(:excontentful, :token)
-  @space System.get_env("CONTENTFUL_SPACE") || Application.get_env(:excontentful, :space)
-
   plug Tesla.Middleware.ParseResponse, %{type: :entries}
-  plug Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{@space}"
-  plug Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{@token}",
-    "User-Agent" => "exContentful"} 
+  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
   plug Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]
 
-  def all do
-    get("/entries")
+  def all(config) do
+    process(config)
   end
 
-  def by_content(type) do
-    get("/entries", query: [content_type: type])
+  def by_content(config, type) do
+    process(config, query: [content_type: type])
   end
 
-  def by_content(type, opts) do
-    query = [content_type: type] ++ opts
-    get("/entries", query: query)
+  def by_content(config, type, opts) do
+    process(config, query: [content_type: type] ++ opts)
   end
 
-  def search(type, query) do
-    get("/entries", query: [content_type: type, query: query])
+  def search(config, type, query) do
+    process(config,  query: [content_type: type, query: query])
+  end
+
+  defp process(config, opts \\ []) do
+    c = client(config)
+    res = get(c, "/entries", opts)
+    {res, c}
+  end
+
+  defp client(config) do
+    case config[:client] do
+      nil ->
+        Tesla.build_client [
+          {Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{config.space}"},
+          {Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{config.token}"}}
+        ]
+     client -> client
+    end
   end
   
 end

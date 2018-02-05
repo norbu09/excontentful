@@ -1,4 +1,4 @@
-defmodule Excontentful.Preview.Entry do
+defmodule Excontentful.Delivery.Asset do
 
   use Tesla
 
@@ -8,22 +8,16 @@ defmodule Excontentful.Preview.Entry do
 
   def get?(config, id) do
     c = client(config)
-    res = get(c, "/entries/#{id}")
+    res = get(c, "/assets/#{id}")
     {res, c}
   end
 
-  def search(config, type, field, value) do
-    c = client(config)
-    res = get(c, "/entries", query: [content_type: type, "fields.#{field}": value])
-    {res, c}
-  end
-  
   defp client(config) do
     case config[:client] do
       nil ->
         Tesla.build_client [
-          {Tesla.Middleware.BaseUrl, "https://preview.contentful.com/spaces/#{config.space}"},
-          {Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{config.prev_token}"}}
+          {Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{config.space}"},
+          {Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{config.token}"}}
         ]
      client -> client
     end

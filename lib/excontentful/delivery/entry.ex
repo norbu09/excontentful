@@ -2,22 +2,32 @@ defmodule Excontentful.Delivery.Entry do
 
   use Tesla
 
-  @token System.get_env("CONTENTFUL_TOKEN") || Application.get_env(:excontentful, :token)
-  @space System.get_env("CONTENTFUL_SPACE") || Application.get_env(:excontentful, :space)
-
   plug Tesla.Middleware.ParseResponse, %{type: :entry}
-  plug Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{@space}"
-  plug Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{@token}",
-    "User-Agent" => "exContentful"} 
+  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
   plug Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]
 
-  def get?(id) do
-    get("/entries/#{id}")
+  def get?(config, id) do
+    c = client(config)
+    res = get(c, "/entries/#{id}")
+    {res, c}
   end
 
-  def search(type, field, value) do
-    get("/entries?content_type=#{type}&fields.#{field}=#{value}")
+  # this only respects the first found vs the `entries` version
+  def search(config, type, field, value) do
+    c = client(config)
+    res = get(c, "/entries", query: [content_type: type, "fields.#{field}": value])
+    {res, c}
   end
   
+  defp client(config) do
+    case config[:client] do
+      nil ->
+        Tesla.build_client [
+          {Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{config.space}"},
+          {Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{config.token}"}}
+        ]
+     client -> client
+    end
+  end
   
 end
