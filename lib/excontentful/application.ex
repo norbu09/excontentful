@@ -10,7 +10,7 @@ defmodule Excontentful.Application do
     # List all child processes to be supervised
     children = [
       # Starts a worker by calling: Excontentful.Worker.start_link(arg)
-      supervisor(Excontentful, []),
+      # supervisor(Excontentful, []),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
