@@ -34,17 +34,14 @@ defmodule Excontentful do
 
   def entries(content_type) do
     GenServer.call(__MODULE__, {:entries, content_type})
-    # Excontentful.Delivery.Entries.by_content(content_type)
   end
 
   def entries(content_type, options) do
     GenServer.call(__MODULE__, {:entries, content_type, options})
-    # Excontentful.Delivery.Entries.by_content(content_type, options)
   end
 
   def search_entries(content_type, query) do
     GenServer.call(__MODULE__, {:search_entries, content_type, query})
-    # Excontentful.Delivery.Entries.search(content_type, query)
   end
 
   @doc """
@@ -53,37 +50,37 @@ defmodule Excontentful do
 
   These calls deal with a single entry and will always return a map.
   """
-  # def get_entry(id) do
-    # Excontentful.Delivery.Entry.get?(id)
-  # end
-#
-  # def get_entry_prev(id) do
-    # Excontentful.Preview.Entry.get?(id)
-  # end
-#
-  # def update_entry(entry) do
-    # Excontentful.Management.Entry.update(entry)
-  # end
-#
-  # def publish_entry(id) do
-    # Excontentful.Management.Entry.publish(id)
-  # end
-#
-  # def unpublish_entry(id) do
-    # Excontentful.Management.Entry.unpublish(id)
-  # end
-#
-  # def delete_entry(id) do
-    # Excontentful.Management.Entry.del(id)
-  # end
-#
-  # def search_entry(content_type, field, value) do
-    # Excontentful.Delivery.Entry.search(content_type, field, value)
-  # end
-#
-  # def search_entry_prev(content_type, field, value) do
-    # Excontentful.Preview.Entry.search(content_type, field, value)
-  # end
+  def get_entry(id) do
+    GenServer.call(__MODULE__, {:entry, id})
+  end
+
+  def get_entry_prev(id) do
+    GenServer.call(__MODULE__, {:entry_prev, id})
+  end
+
+  def update_entry(entry) do
+    GenServer.call(__MODULE__, {:update_entry, entry})
+  end
+
+  def publish_entry(id) do
+    GenServer.call(__MODULE__, {:publish_entry, id})
+  end
+
+  def unpublish_entry(id) do
+    GenServer.call(__MODULE__, {:unpublish_entry, id})
+  end
+
+  def delete_entry(id) do
+    GenServer.call(__MODULE__, {:delete_entry, id})
+  end
+
+  def search_entry(content_type, field, value) do
+    GenServer.call(__MODULE__, {:search_entry, content_type, field, value})
+  end
+
+  def search_entry_prev(content_type, field, value) do
+    GenServer.call(__MODULE__, {:search_entry_prev, content_type, field, value})
+  end
 
   @doc """
   Internal implementation below the fold
@@ -98,5 +95,56 @@ defmodule Excontentful do
     {response, client} = Excontentful.Delivery.Entries.by_content(state.config, type)
     {:reply, response, Map.put(state, "client", client)}
   end
+
+  def handle_call({:entries, type, options}, _from, state) do
+    {response, client} = Excontentful.Delivery.Entries.by_content(state.config, type, options)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:search_entries, type, query}, _from, state) do
+    {response, client} = Excontentful.Delivery.Entries.search(state.config, type, query)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:entry, id}, _from, state) do
+    {response, client} = Excontentful.Delivery.Entry.get?(state.config, id)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:entry_prev, id}, _from, state) do
+    {response, client} = Excontentful.Preview.Entry.get?(state.config, id)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:update_entry, entry}, _from, state) do
+    {response, client} = Excontentful.Management.Entry.update(state.config, entry)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:publish_entry, id}, _from, state) do
+    {response, client} = Excontentful.Management.Entry.publish(state.config, id)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:unpublish_entry, id}, _from, state) do
+    {response, client} = Excontentful.Management.Entry.unpublish(state.config, id)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:delete_entry, id}, _from, state) do
+    {response, client} = Excontentful.Management.Entry.del(state.config, id)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:search_entry, content_type, field, value}, _from, state) do
+    {response, client} = Excontentful.Delivery.Entry.search(state.config, content_type, field, value)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
+  def handle_call({:search_entry_prev, content_type, field, value}, _from, state) do
+    {response, client} = Excontentful.Preview.Entry.search(state.config, content_type, field, value)
+    {:reply, response, Map.put(state, "client", client)}
+  end
+
 
 end

@@ -3,6 +3,7 @@ defmodule Excontentful.Delivery.Entries do
   use Tesla
 
   plug Tesla.Middleware.ParseResponse, %{type: :entries}
+  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
   plug Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]
 
   def all(config) do
@@ -21,13 +22,13 @@ defmodule Excontentful.Delivery.Entries do
     process(config,  query: [content_type: type, query: query])
   end
 
-  def process(config, opts \\ []) do
+  defp process(config, opts \\ []) do
     c = client(config)
     res = get(c, "/entries", opts)
     {res, c}
   end
 
-  def client(config) do
+  defp client(config) do
     case config[:client] do
       nil ->
         Tesla.build_client [
