@@ -104,7 +104,10 @@ defmodule Tesla.Middleware.ParseResponse do
 
   def fetch_asset(id) do
     Logger.debug("Fetching asset: #{id}")
-    Excontentful.get_asset(id)
+    case Excontentful.get_asset(id) do
+      {:ok, asset}  -> asset
+      {:error, err} -> err
+    end
   end
 
 end
