@@ -29,8 +29,7 @@ defmodule Tesla.Middleware.ParseResponse do
   defp parse(res, options) do
     case res.status do
       200 -> {:ok, parse(options.type, res.body)}
-      # _   -> {:error, res.body}
-      _   -> {:error, res}
+      _   -> {:error, %{"error" => res.body}}
     end
   end
 
@@ -63,23 +62,19 @@ defmodule Tesla.Middleware.ParseResponse do
   {key, res}
   end
   defp resolve_include(:asset, {key, %{"sys" => %{"type" => "Link", "linkType" => "Asset", "id" => id}} = val}, includes) do
-    Logger.debug("resolve assets: #{inspect includes} - ID: #{id}")
+    # Logger.debug("resolve assets: #{inspect includes} - ID: #{id}")
     {key, resolve_include(:asset, includes["Asset"], id, val)}
   end
   defp resolve_include(:asset, {key, %{"sys" => %{"type" => "Link", "linkType" => "Entry", "id" => id}} = val}, includes) do
     {key, resolve_include(:asset, includes["Entry"], id, val)}
   end
   defp resolve_include(:error, {key, %{"sys" => %{"id" => id}} = val}, errors) do
-    Logger.error("ERROR: #{inspect errors}")
+    # Logger.error("ERROR: #{inspect errors}")
     {key, resolve_include(:error, errors, id, val)}
   end
   defp resolve_include(_type, tuple, _includes) do
     tuple
   end
-  # defp resolve_include(_type, val, nil) do
-    # val
-  # end
-  # defp resolve_include(:asset, includes, id, _val) when is_list(includes) do
   defp resolve_include(:asset, nil, id, _val) do
     fetch_asset(id)
   end
@@ -87,7 +82,7 @@ defmodule Tesla.Middleware.ParseResponse do
     case Enum.find(includes, fn(x) -> x["sys"]["id"] == id end) do
       nil -> fetch_asset(id)
       res -> 
-        Logger.debug("resolve entry: #{inspect res} - ID: #{id}")
+        # Logger.debug("resolve entry: #{inspect res} - ID: #{id}")
         resolve(res)
     end
   end
