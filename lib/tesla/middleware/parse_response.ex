@@ -29,7 +29,11 @@ defmodule Tesla.Middleware.ParseResponse do
   defp parse(res, options) do
     case res.status do
       200 -> {:ok, parse(options.type, res.body)}
-      _   -> {:error, %{"error" => res.body}}
+      _   -> 
+        if Application.get_env(:excontentful, :debug) do
+          Logger.warn("Got an error: #{inspect(res, pretty: :true)}")
+        end
+        {:error, %{"error" => res.body}}
     end
   end
 
@@ -75,14 +79,16 @@ defmodule Tesla.Middleware.ParseResponse do
   defp resolve_include(_type, tuple, _includes) do
     tuple
   end
-  defp resolve_include(:asset, nil, id, _val) do
+  defp resolve_include(:asset, nil, id, %{"sys" => %{"linkType" => "Entry"}}) do
+    fetch_entry(id)
+  end
+  defp resolve_include(:asset, nil, id, %{"sys" => %{"linkType" => "Asset"}}) do
     fetch_asset(id)
   end
-  defp resolve_include(:asset, includes, id, _val) do
+  defp resolve_include(:asset, includes, id, val) do
     case Enum.find(includes, fn(x) -> x["sys"]["id"] == id end) do
-      nil -> fetch_asset(id)
+      nil -> val
       res -> 
-        # Logger.debug("resolve entry: #{inspect res} - ID: #{id}")
         resolve(res)
     end
   end
@@ -97,6 +103,13 @@ defmodule Tesla.Middleware.ParseResponse do
     end
   end
 
+  def fetch_entry(id) do
+    Logger.debug("Fetching entry: #{id}")
+    case Excontentful.get_entry(id) do
+      {:ok, entry}  -> entry
+      {:error, err} -> err
+    end
+  end
   def fetch_asset(id) do
     Logger.debug("Fetching asset: #{id}")
     case Excontentful.get_asset(id) do
