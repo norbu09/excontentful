@@ -115,5 +115,31 @@ defmodule Excontentful do
     res
   end
 
+  @doc """
+  Content type calls
+  -------------
+
+  These calls deal with content types and let you load/dump content types for easy manipulation
+  """
+  def get_all_content_types do
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.get_all_content_types(pid)
+    GenServer.stop(pid)
+    res
+  end
+
+  def save_all_content_types do
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.save_all_content_types(pid)
+    GenServer.stop(pid)
+    res
+  end
+
+  def load_all_content_types do
+    {:ok, pid} = GenServer.start_link(Excontentful.Client, [])
+    res = Excontentful.Client.load_all_content_types(pid)
+    GenServer.stop(pid)
+    res
+  end
 
 end

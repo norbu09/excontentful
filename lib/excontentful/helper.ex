@@ -16,5 +16,15 @@ defmodule Excontentful.Helper do
      client -> client
     end
   end
-
+  def client(:mgmt, config, header \\ %{}) do
+    h = Map.merge(%{ "Authorization" => "Bearer #{config.mgmt_token}"}, header)
+    case config[:client] do
+      nil ->
+        Tesla.build_client [
+          {Tesla.Middleware.BaseUrl, "https://api.contentful.com/spaces/#{config.space}"},
+          {Tesla.Middleware.Headers, h}
+        ]
+     client -> client
+    end
+  end
 end

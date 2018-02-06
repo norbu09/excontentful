@@ -24,3 +24,6 @@ excontentful-*.tar
 
 # ignore local config overrides
 config/local.exs
+
+# ignore local schema dump
+schema/contentful
