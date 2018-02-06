@@ -14,7 +14,7 @@ defmodule Excontentful.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :tesla, :poison],
+      extra_applications: [:logger, :tesla, :poison, :con_cache],
       mod: {Excontentful.Application, []}
     ]
   end
@@ -23,7 +23,8 @@ defmodule Excontentful.MixProject do
   defp deps do
     [
       {:tesla,  ">= 0.10.0"},
-      {:poison, ">= 1.0.0"}
+      {:poison, ">= 1.0.0"},
+      {:con_cache, ">= 0.12.1"},
     ]
   end
 end

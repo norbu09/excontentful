@@ -11,6 +11,10 @@ defmodule Excontentful.Application do
     children = [
       # Starts a worker by calling: Excontentful.Worker.start_link(arg)
       # supervisor(Excontentful, []),
+      supervisor(ConCache, [[
+        ttl_check_interval: :timer.seconds(1),
+        global_ttl: :timer.minutes(5)
+      ], [name: :content]])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
