@@ -1,7 +1,7 @@
 # Excontentful
 
 ExContentful is a module to interface with
-(Contentful)[https://contentful.com]. Contentful is a powerful hosted CMS that
+[Contentful](https://contentful.com). Contentful is a powerful hosted CMS that
 exposes content via a JSON API. 
 
 I normally implement only the bits of an API that I need right now and then
