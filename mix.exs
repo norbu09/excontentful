@@ -7,7 +7,11 @@ defmodule Excontentful.MixProject do
       version: "0.1.0",
       elixir: ">= 1.5.0",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package(),
+      description: "An interface for the Contentful API",
+      name: "Excontentful",
+      source_url: "https://github.com/norbu09/excontentful"
     ]
   end
 
@@ -25,6 +29,14 @@ defmodule Excontentful.MixProject do
       {:tesla,  ">= 0.10.0"},
       {:poison, ">= 1.0.0"},
       {:con_cache, ">= 0.12.1"},
+    ]
+  end
+
+  defp package() do
+    [
+      maintainers: ["Lenz Gschwendtner"],
+      licenses: ["BSD"],
+      links: %{"GitHub" => "https://github.com/norbu09/excontentful"}
     ]
   end
 end
