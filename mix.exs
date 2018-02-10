@@ -4,7 +4,7 @@ defmodule Excontentful.MixProject do
   def project do
     [
       app: :excontentful,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: ">= 1.5.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -19,6 +19,7 @@ defmodule Excontentful.MixProject do
   def application do
     [
       extra_applications: [:logger, :tesla, :poison, :con_cache],
+      included_applications: [:exactor, :mime],
       mod: {Excontentful.Application, []}
     ]
   end
@@ -29,6 +30,10 @@ defmodule Excontentful.MixProject do
       {:tesla,  ">= 0.10.0"},
       {:poison, ">= 1.0.0"},
       {:con_cache, ">= 0.12.1"},
+      #
+     # dev related
+     {:credo, ">= 0.7.3", only: :dev, warn_missing: false},
+     {:distillery, ">= 1.0.0", only: :dev, warn_missing: false}
     ]
   end
 
