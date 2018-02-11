@@ -3,10 +3,6 @@ defmodule Excontentful.Management.Entry do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.ParseResponse, %{type: :raw}
-  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
-  plug Tesla.Middleware.JSON, decode_content_types: ["application/octet-stream", "application/vnd.contentful.management.v1+json"]
-
   def update(config, entry) do
     c = Excontentful.Helper.client(:mgmt, config)
     res = put(c, "/entries/#{entry["sys"]["id"]}", entry)

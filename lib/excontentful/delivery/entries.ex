@@ -3,9 +3,7 @@ defmodule Excontentful.Delivery.Entries do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.ParseResponse, %{type: :entries}
-  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
-  plug Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]
+  plug Tesla.Middleware.ParseContentfulResponse, %{type: :entries}
 
   def all(config) do
     process(config, "all")

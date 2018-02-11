@@ -3,10 +3,6 @@ defmodule Excontentful.Management.ContentTypes do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.ParseResponse, %{type: :raw}
-  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
-  plug Tesla.Middleware.JSON, decode_content_types: ["application/octet-stream", "application/vnd.contentful.management.v1+json"]
-
   def get_all(config) do
     c = Excontentful.Helper.client(:mgmt, config)
     res = get(c, "content_types")

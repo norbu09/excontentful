@@ -30,10 +30,9 @@ defmodule Excontentful.MixProject do
       {:tesla,  ">= 0.10.0"},
       {:poison, ">= 1.0.0"},
       {:con_cache, ">= 0.12.1"},
-      #
-     # dev related
-     {:credo, ">= 0.7.3", only: :dev, warn_missing: false},
-     {:distillery, ">= 1.0.0", only: :dev, warn_missing: false}
+      # dev related
+      {:credo, ">= 0.7.3", only: :dev, warn_missing: false},
+      {:distillery, ">= 1.0.0", only: :dev, warn_missing: false}
     ]
   end
 
