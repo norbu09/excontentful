@@ -3,8 +3,6 @@ defmodule Excontentful.Delivery.Entries do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.ParseContentfulResponse, %{type: :entries}
-
   def all(config) do
     process(config, "all")
   end
@@ -24,7 +22,7 @@ defmodule Excontentful.Delivery.Entries do
   end
 
   defp process(config, path, opts \\ []) do
-    c = Excontentful.Helper.client(:delivery, config)
+    c = Excontentful.Helper.client(:delivery, config, :entries)
     res = Excontentful.Helper.cached?(path, fn() -> 
       Logger.debug("cache miss for #{path}")
       get(c, "/entries", opts)

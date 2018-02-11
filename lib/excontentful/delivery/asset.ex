@@ -3,10 +3,9 @@ defmodule Excontentful.Delivery.Asset do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.ParseContentfulResponse, %{type: :entry}
 
   def get?(config, id) do
-    c = Excontentful.Helper.client(:delivery, config)
+    c = Excontentful.Helper.client(:delivery, config, :entry)
     res = Excontentful.Helper.cached?(id, fn() -> 
       Logger.debug("cache miss for #{id}")
       get(c, "/assets/#{id}") 

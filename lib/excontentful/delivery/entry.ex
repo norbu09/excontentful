@@ -3,10 +3,8 @@ defmodule Excontentful.Delivery.Entry do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.ParseContentfulResponse, %{type: :entry}
-
   def get?(config, id) do
-    c = Excontentful.Helper.client(:delivery, config)
+    c = Excontentful.Helper.client(:delivery, config, :entry)
     res = Excontentful.Helper.cached?(id, fn() -> 
       Logger.debug("cache miss for #{id}")
       get(c, "/entries/#{id}") 
@@ -16,7 +14,7 @@ defmodule Excontentful.Delivery.Entry do
 
   # this only respects the first found vs the `entries` version
   def search(config, type, field, value) do
-    c = Excontentful.Helper.client(:delivery, config)
+    c = Excontentful.Helper.client(:delivery, config, :entry)
     path = Enum.join([type, field, value], "/")
     res = Excontentful.Helper.cached?(path, fn() -> 
       Logger.debug("cache miss for #{path}")

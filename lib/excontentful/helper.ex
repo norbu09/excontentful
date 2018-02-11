@@ -6,10 +6,11 @@ defmodule Excontentful.Helper do
     ConCache.get_or_store(:content, path, fun)
   end
   
-  def client(:delivery, config) do
+  def client(:delivery, config, type) do
     case config[:client] do
       nil ->
         Tesla.build_client [
+          {Tesla.Middleware.ParseContentfulResponse, %{type: type}},
           {Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]},
           {Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{config.space}"},
           {Tesla.Middleware.Headers, %{"Authorization" => "Bearer #{config.token}", "User-Agent" => "exContentful"}}
