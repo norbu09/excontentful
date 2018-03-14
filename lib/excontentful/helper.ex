@@ -3,7 +3,10 @@ defmodule Excontentful.Helper do
   use Tesla
   
   def cached?(path, fun) do
-    ConCache.get_or_store(:content, path, fun)
+    case Application.get_env(:excontentful, :local_cache, false) do
+      true -> ConCache.get_or_store(:content, path, fun)
+      false -> fun.()
+    end
   end
   
   def client(:delivery, config, type) do

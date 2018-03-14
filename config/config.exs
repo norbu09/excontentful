@@ -25,7 +25,8 @@ config :excontentful,
   space: "foo",
   token: "bar",
   prev_token: "baz",
-  mgmt_token: "bay"
+  mgmt_token: "bay",
+  local_cache: false
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
