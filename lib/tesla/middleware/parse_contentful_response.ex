@@ -27,8 +27,6 @@ defmodule Tesla.Middleware.ParseContentfulResponse do
   end
 
   defp parse({:ok, res}, options) do
-    Logger.debug("type: #{inspect options.type}")
-    Logger.debug("body: #{inspect res.body}")
     {:ok, parse(options.type, res.body)}
   end
   defp parse({:error, res}, _options) do
@@ -46,10 +44,14 @@ defmodule Tesla.Middleware.ParseContentfulResponse do
   end
 
   defp resolve(item) do
-    item["fields"]
-    |> resolve_includes(:asset, item["includes"])
-    |> resolve_includes(:error, item["errors"])
-    |> Map.put("sys", item["sys"])
+    case item["fields"] do
+      nil -> item
+      fields ->
+        fields
+        |> resolve_includes(:asset, item["includes"])
+        |> resolve_includes(:error, item["errors"])
+        |> Map.put("sys", item["sys"])
+    end
   end
 
 
