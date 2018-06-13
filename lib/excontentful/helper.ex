@@ -16,7 +16,7 @@ defmodule Excontentful.Helper do
           {Tesla.Middleware.ParseContentfulResponse, %{type: type}},
           {Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]},
           {Tesla.Middleware.BaseUrl, "https://cdn.contentful.com/spaces/#{config.space}"},
-          {Tesla.Middleware.Headers, %{"Authorization" => "Bearer #{config.token}", "User-Agent" => "exContentful"}}
+          {Tesla.Middleware.Headers, [{"Authorization", "Bearer #{config.token}"}, {"User-Agent", "exContentful"}]}
         ]
      client -> client
     end
@@ -29,7 +29,7 @@ defmodule Excontentful.Helper do
           {Tesla.Middleware.ParseContentfulResponse, %{type: :raw}},
           {Tesla.Middleware.JSON, decode_content_types: ["application/octet-stream", "application/vnd.contentful.delivery.v1+json"]},
           {Tesla.Middleware.BaseUrl, "https://api.contentful.com/spaces/#{config.space}"},
-          {Tesla.Middleware.Headers, h}
+          {Tesla.Middleware.Headers, Map.to_list(h)}
         ]
      client -> client
     end

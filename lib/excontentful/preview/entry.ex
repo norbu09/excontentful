@@ -23,7 +23,7 @@ defmodule Excontentful.Preview.Entry do
       nil ->
         Tesla.build_client [
           {Tesla.Middleware.BaseUrl, "https://preview.contentful.com/spaces/#{config.space}"},
-          {Tesla.Middleware.Headers, %{ "Authorization" => "Bearer #{config.prev_token}"}}
+          {Tesla.Middleware.Headers, [{ "Authorization", "Bearer #{config.prev_token}"}]}
         ]
      client -> client
     end
