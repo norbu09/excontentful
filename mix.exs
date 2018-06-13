@@ -19,7 +19,7 @@ defmodule Excontentful.MixProject do
   def application do
     [
       extra_applications: [:logger, :tesla, :poison, :con_cache],
-      included_applications: [:exactor, :mime],
+      included_applications: [:mime],
       mod: {Excontentful.Application, []}
     ]
   end
