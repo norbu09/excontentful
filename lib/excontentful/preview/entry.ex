@@ -3,7 +3,7 @@ defmodule Excontentful.Preview.Entry do
   use Tesla
 
   plug Tesla.Middleware.ParseContentfulResponse, %{type: :entry}
-  plug Tesla.Middleware.Headers, %{"User-Agent" => "exContentful"} 
+  plug Tesla.Middleware.Headers, [{"User-Agent", "exContentful"}]
   plug Tesla.Middleware.JSON, decode_content_types: ["application/vnd.contentful.delivery.v1+json"]
 
   def get?(config, id) do

@@ -4,7 +4,7 @@ defmodule Excontentful.MixProject do
   def project do
     [
       app: :excontentful,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: ">= 1.5.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -27,7 +27,7 @@ defmodule Excontentful.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tesla,  ">= 0.10.0"},
+      {:tesla,  ">= 1.0.0"},
       {:poison, ">= 1.0.0"},
       {:con_cache, ">= 0.12.1"},
       # dev related
