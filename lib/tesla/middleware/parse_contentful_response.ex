@@ -26,15 +26,16 @@ defmodule Tesla.Middleware.ParseContentfulResponse do
     body
   end
 
-  defp parse(res, options) do
-    case res.status do
-      200 -> {:ok, parse(options.type, res.body)}
-      _   -> 
-        if Application.get_env(:excontentful, :debug) do
-          Logger.warn("Got an error: #{inspect(res, pretty: :true)}")
-        end
-        {:error, %{"error" => res.body}}
+  defp parse({:ok, res}, options) do
+    Logger.debug("type: #{inspect options.type}")
+    Logger.debug("body: #{inspect res.body}")
+    {:ok, parse(options.type, res.body)}
+  end
+  defp parse({:error, res}, _options) do
+    if Application.get_env(:excontentful, :debug) do
+      Logger.warn("Got an error: #{inspect(res, pretty: :true)}")
     end
+    {:error, %{"error" => res.body}}
   end
 
   defp item(itm, includes, errors) do
